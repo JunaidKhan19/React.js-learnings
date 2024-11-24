@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import databaseServices from '../appwrite/database'; 
 import { Link } from "react-router-dom";
 
