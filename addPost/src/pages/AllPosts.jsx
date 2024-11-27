@@ -15,14 +15,19 @@ function AllPosts() {
   return (
     <div className='w-full py-8'>
         <Container>
-            <div className='flex flex-wrap'>
-                {posts.map((post) => (
-                    <div key={post.$id} className='p-2 w-1/4'>
-                        <PostCard {...post} />
-                    </div>
-                ))}
-            </div>
-        </Container>
+                <div className='flex flex-wrap'>
+                    {posts.length > 0 ? (posts.map((post) => (
+                            <div key={post.$id}>
+                                <PostCard {...post} />
+                            </div>
+                        ))
+                    ) : (
+                        <div className="p-2 w-full">
+                            <p>No posts found</p>
+                        </div>
+                    )}
+                </div>
+            </Container>
     </div>
   )
 }

@@ -11,15 +11,24 @@ function Signup() {
     const dispatch = useDispatch()
     const {register, handleSubmit} = useForm()
     const [error, setError] = useState()
+    
+    const clearPreviousSessions = async() => {
+        try {
+            await authService.logout();
+        } catch (error) {
+            console.error("Failed to clear previous sessions", error);
+        }
+    }
 
-    const create = async(data) => {
+    const createAcc = async(data) => {
         setError("");
         try {
+            await clearPreviousSessions();
             const userData = await authService.createAccount(data)
             if (userData){
                 const userData = await authService.getCurrentUser()
                 if (userData) dispatch(login(userData));
-                navigate("/")
+                else navigate("/")
             }
         } catch (error) {
             setError(error.message)
@@ -45,7 +54,7 @@ function Signup() {
                 </Link>
             </p>
             {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-            <form onSubmit={handleSubmit(create)}>
+            <form onSubmit={handleSubmit(createAcc)}>
                 <div className='space-y-5'>
                     <Input label="Name: " placeholder="enter your fullname" 
                         {...register("name", {required : true})}

@@ -17,14 +17,15 @@ function Login() {
         try {
             const session = await authService.login(data)
             if (session){
-                const userData = await authService.getCurrentUser()
-                if (userData){
-                    dispatch(authLogin(userData))
-                }
-                navigate("/")
+                const userData = await authService.getCurrentUser();
+                if (userData) {
+                    dispatch(authLogin(userData));
+                } 
+                navigate("/");
             }
+            return session;
         } catch (error) {
-            setError(error.message)
+            setError(error.message || "Failed to log in")
         }
     }
     
@@ -69,4 +70,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Login;

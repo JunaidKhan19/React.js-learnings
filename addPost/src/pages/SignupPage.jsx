@@ -1,5 +1,4 @@
-import React from 'react'
-import Signup from "../components/index";
+import { Signup } from "../components/index";
 
 function SignupPage() {
   return (

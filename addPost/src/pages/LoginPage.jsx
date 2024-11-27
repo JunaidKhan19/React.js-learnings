@@ -1,5 +1,4 @@
-import React from 'react'
-import Login from "../components/index"
+import { Login } from "../components/index"
 
 function LoginPage() {
   return (
@@ -9,4 +8,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default LoginPage;

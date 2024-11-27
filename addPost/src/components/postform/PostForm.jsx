@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useCallback, useEffect } from 'react';
-import { Input, Button, Select, RTE} from "../index";
+import { Input, Button, Select} from "../index";
 import { useForm } from 'react-hook-form';
-import { databaseServices } from '../../appwrite/database';
+import databaseServices from '../../appwrite/database';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function PostForm({post}) {
-    const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
+    const {register, handleSubmit, watch, setValue} = useForm({
         defaultValues : {
             title : post?.title || '',
             slug : post?.slug || '',
@@ -17,11 +17,12 @@ function PostForm({post}) {
     })
 
     const navigate = useNavigate()
-    const userData = useSelector(state => state.user.userData)
+    const userData = useSelector(state => state.auth?.userData)
 
     const submit = async(data) => {
+        const userId = userData?.userData?.$id;
         if (post){
-            const file = data.image[0]? databaseServices.uploadFile(data.image[0]) : null
+            const file = data.image[0]? await databaseServices.uploadFile(data.image[0]) : null
 
             if (file) {
                 databaseServices.deleteFile(post.image);
@@ -40,8 +41,11 @@ function PostForm({post}) {
             if (file){
                 const fileId = file.$id
                 data.image = fileId
-                const dbPost = await databaseServices.createPost({...data, userId : userData.$id})
+                const dbPost = await databaseServices.createPost({ ...data, userId : userId })
+                
                 if (dbPost) {
+                    console.log("dbPost ID:", dbPost.$id);
+                    console.log(dbPost.$id)
                     navigate(`/post/${dbPost.$id}`);
                 }
             }
@@ -50,7 +54,7 @@ function PostForm({post}) {
 
     const slugTransform = useCallback((value) => {
         if (value && typeof value === "string"){
-            return value.trim().toLowerCase().replace(/\s/g, '-')
+            return value.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
         } else {
             return '';
         }
@@ -77,7 +81,12 @@ function PostForm({post}) {
                 setValue('slug', slugTransform(e.currentTarget.value), {shouldValidate : true})
             }}
             />
-            <RTE label="Content: " name="content" control={control} defaultValue={getValues("content")}/>
+            <textarea
+                label="Content: "
+                className="w-full mb-4 p-2 border rounded-md"
+                placeholder="Content"
+                {...register("content", {required: true})}
+            />
         </div>
         <div className="w-1/3 px-2">
             <Input label="Featured Image: " type="file" className='mb-4'
@@ -87,7 +96,7 @@ function PostForm({post}) {
             {post && 
                 <div className="w-full mb-4">
                     <img
-                        src= {databaseServices.getFilePreview(post.image)}
+                        src= {post.image ? databaseServices.getFilePreview(String(post.image)) : null}
                         alt= {post.title}
                         className="rounded-lg"
                     />
@@ -99,9 +108,14 @@ function PostForm({post}) {
                 className="mb-4"
                 {...register("status", {required : true})}
             />
+            {post ? 
             <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                {post ? "Update" : "Submit"}
+                Update
+            </Button> :
+            <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
+                Submit
             </Button>
+            }
         </div>
       </form>
     )
