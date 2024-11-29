@@ -1,0 +1,48 @@
+About:
+This is a blog posting project made with react and includes many other tools and libraries such as react-redux, 
+redux-toolkit(RTK), react-dom, react-hook-form, react-router-dom and html-react-parser. 
+Appwrite backend as service was used.
+Tinymce-react was used to include editor functionalities.
+The app has functionalities such as signup, login, logout, add/update/delete any post, file preview, etc.
+
+(I) Appwrite:
+Files are being uploaded on appwrite where we can make collections in a database and also declare the variables 
+for which values will be recieved from the application. 
+Appwrite functionalities just needs to be configured in few simple steps:-
+1. The .env file holds the sensitive information which is where we stored bucketId(storageId), collectionId, 
+   databaseId, projectId and url_endpoint as variables.
+2. These variables were imported and converted into string formats in the config file so that they may be 
+   easily used without disclosing their values.
+3. In src/appwrite folder, auth.js and database.js holds the services linking the application to appwrite backend.
+4. auth.js has services(methods) to create, login, logout and get current user.
+5. database.js has services to create post, update post, delete post, get a single post, get all posts and 
+   upload file, delete file, download file, preview a file(image)  
+
+(II) React-redux and redux-toolkit:
+Redux is a state management library, react redux is used to serve as a bridge to use redux in react.
+Redux works on the idea of having a central store which should not be mutated directly and serve as a true state 
+and any kind of change in the state should be done through functions called as reducers. 
+Core Principles of redux are-:
+1.Single source of truth: State is stored in a single object.
+2.State is read-only: State updates are made via actions.
+3.Changes are made with pure functions: Reducers handle state changes based on dispatched actions.
+
+Redux-toolkit (RTK)
+RTK is a library to reduce the boilerplate code for redux and handle it more efficiently.
+The reducer functionality is written in a file called as slice. Here the initial state is defined/declared and 
+the reducers which are action provides help to update the state. Store file is the component to save the state 
+and update it when the reducers are used.
+
+React-redux
+To use the state and the reducer(basically the actions) we need the useState and useDispatch hooks which 
+provided by react-redux. The useState hook is used to get the state of the store and useDispatch is used to 
+dispatch the update to the state in the store.
+
+Hence the structure and flow can be deduced as - 
+store (where slice is passed in reducer) -> the slice where the name, initial state and the reducers 
+are initialized -> the components where the app is made using them through react-redux hooks.
+
+(III) React-hook-form:
+React Hook Form is a library in React that helps you build and manage forms easily. It focuses on making forms 
+fast, efficient, and simple to validate. There are many methods in it that makes it easy to enter data, handle events
+and errors, etc. 
